@@ -1920,4 +1920,605 @@ Here are the answers to your additional Angular questions:
   - **Modular State:** Organize state management within feature modules.
   - **Selectors:** Use selectors to query and manage state efficiently.
 
+Certainly! Here are a few additional important Angular questions with answers:
+
+**93. What is Angular’s Zone.js and how does it work with change detection?**
+
+- **Zone.js:** A library that Angular uses to track asynchronous operations (like HTTP requests, setTimeout, etc.) and automatically trigger change detection when these operations complete.
+
+  **How It Works:**
+  - **Monkey Patching:** Zone.js patches asynchronous APIs to keep track of execution context.
+  - **Change Detection Trigger:** When an asynchronous operation completes, Zone.js informs Angular to check for changes and update the UI.
+
+  **Example:** If you make an HTTP request, Zone.js ensures that Angular runs change detection when the request completes.
+
+**94. How does Angular handle lazy loading of modules and what are its benefits?**
+
+- **Lazy Loading:** A technique to load modules on demand, rather than at the initial load. It improves performance by reducing the initial bundle size and speeding up the application startup.
+
+  **Implementation:**
+  - **Routing Configuration:** Configure lazy loading in Angular’s router by using the `loadChildren` property.
+
+  **Example:**
+  ```typescript
+  const routes: Routes = [
+    { path: 'feature', loadChildren: () => import('./feature/feature.module').then(m => m.FeatureModule) }
+  ];
+  ```
+
+  **Benefits:**
+  - **Reduced Initial Load Time:** Smaller initial bundle size.
+  - **Improved Performance:** Modules are loaded only when needed.
+
+**95. What are Angular’s lifecycle hooks, and how do they help manage component behavior?**
+
+- **Lifecycle Hooks:** Methods that Angular calls at specific stages of a component or directive’s lifecycle.
+
+  **Common Lifecycle Hooks:**
+  - **`ngOnInit`:** Called once after the component’s data-bound properties are initialized.
+  - **`ngOnChanges`:** Called when any data-bound property changes.
+  - **`ngDoCheck`:** Called during every change detection run.
+  - **`ngOnDestroy`:** Called just before Angular destroys the component.
+
+  **Example Usage:**
+  ```typescript
+  @Component({
+    selector: 'app-example',
+    templateUrl: './example.component.html'
+  })
+  export class ExampleComponent implements OnInit, OnDestroy {
+    ngOnInit() {
+      // Initialization logic
+    }
+    
+    ngOnDestroy() {
+      // Cleanup logic
+    }
+  }
+  ```
+
+**96. What are Angular decorators, and how do they enhance the functionality of Angular components?**
+
+- **Angular Decorators:** Functions that add metadata to classes and their properties, enhancing their functionality. They play a crucial role in defining components, services, directives, and modules.
+
+  **Common Decorators:**
+  - **`@Component`:** Defines a component, including its template and style.
+  - **`@Directive`:** Defines a directive, including its behavior.
+  - **`@Injectable`:** Marks a class as injectable, allowing it to be used as a service.
+  - **`@NgModule`:** Defines an Angular module and its dependencies.
+
+  **Example:**
+  ```typescript
+  @Component({
+    selector: 'app-example',
+    templateUrl: './example.component.html'
+  })
+  export class ExampleComponent {
+    // Component logic
+  }
+  ```
+
+**97. What is Angular’s ChangeDetectionStrategy, and how does it impact performance?**
+
+- **ChangeDetectionStrategy:** Determines how Angular checks for changes in a component’s view.
+
+  **Strategies:**
+  - **`Default`:** Checks the entire component tree. It can impact performance as the application scales.
+  - **`OnPush`:** Checks only when the input properties change or an event occurs. This can improve performance by reducing the frequency of change detection runs.
+
+  **Example:**
+  ```typescript
+  @Component({
+    selector: 'app-example',
+    changeDetection: ChangeDetectionStrategy.OnPush
+  })
+  export class ExampleComponent {
+    // Component logic
+  }
+  ```
+
+**98. What are Angular directives, and how are they different from components?**
+
+- **Directives:** Classes that add behavior to elements in the DOM. They can be structural (e.g., `*ngIf`, `*ngFor`) or attribute-based (e.g., changing styles).
+
+  **Types:**
+  - **Structural Directives:** Change the DOM layout by adding or removing elements (e.g., `*ngIf`, `*ngFor`).
+  - **Attribute Directives:** Change the appearance or behavior of an element (e.g., `ngClass`, `ngStyle`).
+
+  **Components vs. Directives:**
+  - **Components:** Have a template, styles, and a class that manages behavior.
+  - **Directives:** Only modify the behavior or appearance of elements without their own templates.
+
+  **Example of a Structural Directive:**
+  ```typescript
+  @Directive({
+    selector: '[appHighlight]'
+  })
+  export class HighlightDirective {
+    constructor(private el: ElementRef) {
+      el.nativeElement.style.backgroundColor = 'yellow';
+    }
+  }
+  ```
+
+**99. How do Angular services help in managing application state and business logic?**
+
+- **Angular Services:** Classes that handle business logic and data management, separate from UI components. They are singletons by default, making them ideal for managing shared state and logic.
+
+  **Usage:**
+  - **Dependency Injection:** Services are injected into components or other services using Angular’s dependency injection system.
+  - **State Management:** Services can manage and provide application state to components.
+
+  **Example:**
+  ```typescript
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DataService {
+    private data: string[] = [];
+
+    getData() {
+      return this.data;
+    }
+
+    addData(item: string) {
+      this.data.push(item);
+    }
+  }
+  ```
+
+**100. How does Angular handle routing, and what are the key features of its router module?**
+
+- **Angular Routing:** Allows navigation between different views or components in an Angular application. The Angular Router provides a powerful way to manage routes and navigation.
+
+  **Key Features:**
+  - **Routing Module:** Define routes and their associated components.
+  - **RouterOutlet:** A directive where routed components are displayed.
+  - **RouterLink:** A directive for navigation links.
+  - **Route Guards:** Control access to routes based on conditions (e.g., authentication).
+
+  **Example:**
+  ```typescript
+  const routes: Routes = [
+    { path: '', component: HomeComponent },
+    { path: 'about', component: AboutComponent }
+  ];
+
+  @NgModule({
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
+  })
+  export class AppRoutingModule { }
+  ```
+
+Certainly! Here are additional important Angular-related questions and answers:
+
+**101. What are Angular Elements and how can you use them?**
+
+- **Angular Elements:** Angular Elements allow you to create Angular components and use them as custom elements (web components). This enables Angular components to be used in non-Angular environments or alongside other libraries.
+
+  **How to Use:**
+  - **Create a Component:** Define an Angular component.
+  - **Package as Custom Element:** Use `@angular/elements` to convert the Angular component into a custom element.
+  - **Register Custom Element:** Register the custom element in the browser.
+
+  **Example:**
+  ```typescript
+  import { Injector, NgModule } from '@angular/core';
+  import { BrowserModule } from '@angular/platform-browser';
+  import { createCustomElement } from '@angular/elements';
+  import { AppComponent } from './app.component';
+
+  @NgModule({
+    declarations: [AppComponent],
+    imports: [BrowserModule],
+    entryComponents: [AppComponent]
+  })
+  export class AppModule {
+    constructor(private injector: Injector) {
+      const el = createCustomElement(AppComponent, { injector });
+      customElements.define('app-element', el);
+    }
+
+    ngDoBootstrap() {}
+  }
+  ```
+
+**102. What is Angular Universal and how does it enable server-side rendering (SSR)?**
+
+- **Angular Universal:** A tool for server-side rendering (SSR) that allows Angular applications to be rendered on the server before being sent to the client. This improves SEO and initial load performance.
+
+  **How It Works:**
+  - **Server-Side Rendering:** Pre-renders the HTML on the server, which is then sent to the client.
+  - **Bootstrapping:** Runs the Angular application on the server using Node.js.
+
+  **Implementation:**
+  - **Install Packages:** Install `@nguniversal/express-engine` and `@nguniversal/module-map-ngfactory-loader`.
+  - **Configure Server:** Set up an Express server to handle server-side rendering.
+  - **Build and Serve:** Build the application for SSR and serve it using the Express server.
+
+  **Example Command:**
+  ```bash
+  ng add @nguniversal/express-engine
+  ng build --prod && ng run your-app-name:server
+  ```
+
+**103. What are Angular’s change detection mechanisms and how do they work?**
+
+- **Change Detection:** Angular’s mechanism for updating the view when data changes. It runs in response to events or asynchronous operations.
+
+  **Mechanisms:**
+  - **Default Change Detection:** Checks the entire component tree for changes. Triggered by events, async operations, and manual change detection calls.
+  - **OnPush Change Detection:** Checks only when input properties change or when an event occurs. Improves performance by reducing the frequency of checks.
+
+  **Example of OnPush:**
+  ```typescript
+  @Component({
+    selector: 'app-example',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `...`
+  })
+  export class ExampleComponent {
+    @Input() data: any;
+  }
+  ```
+
+**104. How can you implement offline functionality in an Angular application?**
+
+- **Offline Functionality:** Allows the application to function even without an internet connection.
+
+  **Implementation:**
+  - **Service Workers:** Use Angular’s Service Worker to cache resources and enable offline access.
+  - **Caching Strategies:** Implement caching strategies to manage which resources are cached and when to update them.
+
+  **Example:**
+  - **Add Service Worker:**
+    ```bash
+    ng add @angular/pwa
+    ```
+  - **Configure `ngsw-config.json`:** Define caching strategies and resources to cache.
+
+**105. What are some best practices for structuring large Angular applications?**
+
+- **Modularization:** Organize the application into modules to separate concerns and manage dependencies.
+- **Lazy Loading:** Implement lazy loading to reduce the initial load time by loading modules on demand.
+- **Feature Modules:** Create feature modules for related components, services, and other functionalities.
+- **Services:** Use services to handle business logic and data management.
+- **State Management:** Consider using state management libraries (e.g., NgRx) for complex applications.
+
+  **Example:**
+  - **Feature Module Structure:**
+    ```plaintext
+    src/app
+    ├── core
+    ├── shared
+    ├── feature
+    │   ├── feature.module.ts
+    │   ├── feature.component.ts
+    │   └── feature.service.ts
+    └── app.module.ts
+    ```
+
+**106. What is Angular’s Renderer2 and how is it used?**
+
+- **Renderer2:** A service for manipulating the DOM in a platform-independent way. It provides a set of methods for safely updating the DOM without directly accessing it.
+
+  **Usage:**
+  - **Inject Renderer2:** Inject it into a component or service.
+  - **Manipulate DOM:** Use methods like `setStyle`, `addClass`, `removeClass`, and `setAttribute`.
+
+  **Example:**
+  ```typescript
+  import { Component, Renderer2, ElementRef } from '@angular/core';
+
+  @Component({
+    selector: 'app-example',
+    template: `<div #myDiv>Content</div>`
+  })
+  export class ExampleComponent {
+    constructor(private renderer: Renderer2, private el: ElementRef) {}
+
+    ngAfterViewInit() {
+      this.renderer.setStyle(this.el.nativeElement.querySelector('div'), 'color', 'blue');
+    }
+  }
+  ```
+
+**107. What are Angular decorators and how are they used?**
+
+- **Decorators:** Functions that add metadata to classes, methods, or properties. They are used to define components, directives, services, and modules.
+
+  **Common Decorators:**
+  - **`@Component`:** Defines an Angular component.
+  - **`@Directive`:** Defines a directive.
+  - **`@Injectable`:** Marks a class as a service that can be injected.
+  - **`@NgModule`:** Defines an Angular module and its dependencies.
+
+  **Example:**
+  ```typescript
+  @Component({
+    selector: 'app-example',
+    template: '<h1>Hello</h1>'
+  })
+  export class ExampleComponent {}
+  ```
+
+**108. What is Angular’s HttpClient and how does it differ from Http?**
+
+- **HttpClient:** A modern, flexible HTTP client introduced in Angular 4.3. It provides a simplified API and supports observables for handling asynchronous requests.
+
+  **Differences from `Http`:**
+  - **`HttpClient`:** Supports typed responses, more powerful and flexible.
+  - **`Http`:** Deprecated in favor of `HttpClient`, provides a callback-based API.
+
+  **Example of HttpClient Usage:**
+  ```typescript
+  import { HttpClient } from '@angular/common/http';
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DataService {
+    constructor(private http: HttpClient) {}
+
+    getData() {
+      return this.http.get('api/data');
+    }
+  }
+  ```
+
+**109. What is Angular’s ChangeDetectionStrategy and how does it impact performance?**
+
+- **ChangeDetectionStrategy:** Controls how Angular checks for changes in the application.
+
+  **Strategies:**
+  - **`Default`:** Angular checks the entire component tree during change detection.
+  - **`OnPush`:** Angular checks only when the input properties change or an event occurs. This reduces the frequency of change detection runs, improving performance.
+
+  **Example:**
+  ```typescript
+  @Component({
+    selector: 'app-example',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `...`
+  })
+  export class ExampleComponent {}
+  ```
+
+**110. How do you handle authentication and authorization in Angular applications?**
+
+- **Authentication and Authorization:** Ensuring secure access to resources and verifying user identity.
+
+  **Implementation:**
+  - **Authentication:** Implement login logic using services to validate user credentials and manage sessions.
+  - **Authorization:** Use route guards to protect routes based on user roles or permissions.
+
+  **Example:**
+  - **Auth Guard:**
+    ```typescript
+    @Injectable({
+      providedIn: 'root'
+    })
+    export class AuthGuard implements CanActivate {
+      constructor(private authService: AuthService, private router: Router) {}
+
+      canActivate(): boolean {
+        if (this.authService.isLoggedIn()) {
+          return true;
+        } else {
+          this.router.navigate(['/login']);
+          return false;
+        }
+      }
+    }
+    ```
+
+Certainly! Here are some more important Angular-related questions and answers:
+
+**111. What are Angular’s testing strategies and tools?**
+
+- **Testing Strategies:**
+  - **Unit Testing:** Testing individual components, services, and other units in isolation. Ensures that each unit works as expected.
+  - **Integration Testing:** Testing how different units work together. Ensures that integrated components function correctly.
+  - **End-to-End (E2E) Testing:** Testing the application as a whole. Ensures that the application works as expected from the user's perspective.
+
+- **Tools:**
+  - **Karma:** A test runner for running unit tests in different browsers.
+  - **Jasmine:** A behavior-driven testing framework used with Karma for writing unit tests.
+  - **Protractor:** An end-to-end testing framework for Angular applications, built on top of WebDriverJS.
+
+  **Example of a unit test with Jasmine:**
+  ```typescript
+  import { ComponentFixture, TestBed } from '@angular/core/testing';
+  import { ExampleComponent } from './example.component';
+
+  describe('ExampleComponent', () => {
+    let component: ExampleComponent;
+    let fixture: ComponentFixture<ExampleComponent>;
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        declarations: [ ExampleComponent ]
+      })
+      .compileComponents();
+    });
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(ExampleComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
+  });
+  ```
+
+**112. What is Angular’s Service Worker and how do you configure it?**
+
+- **Service Worker:** A script that runs in the background of a web application. It enables features like caching, background sync, and offline functionality.
+
+  **Configuration:**
+  - **Add PWA Support:** Use Angular CLI to add PWA capabilities, which includes setting up a service worker.
+  - **Configure `ngsw-config.json`:** Define caching strategies and resources to cache.
+
+  **Example:**
+  ```bash
+  ng add @angular/pwa
+  ```
+
+  **`ngsw-config.json`:**
+  ```json
+  {
+    "index": "/index.html",
+    "assetGroups": [
+      {
+        "name": "app",
+        "installMode": "prefetch",
+        "resources": {
+          "files": [
+            "/favicon.ico",
+            "/index.html",
+            "/manifest.webmanifest"
+          ]
+        }
+      }
+    ]
+  }
+  ```
+
+**113. How does Angular handle memory management and garbage collection?**
+
+- **Memory Management:** Angular handles memory management through its dependency injection system and change detection mechanisms.
+
+  **Garbage Collection:**
+  - **Automatic:** Angular relies on JavaScript’s garbage collection to clean up unused objects and memory. Unused components and services are removed automatically by the browser’s garbage collector.
+  - **Manual Cleanup:** Developers need to manually unsubscribe from observables and remove event listeners to prevent memory leaks.
+
+  **Example of manual cleanup:**
+  ```typescript
+  import { Subscription } from 'rxjs';
+
+  export class ExampleComponent implements OnDestroy {
+    private subscription: Subscription = new Subscription();
+
+    ngOnInit() {
+      this.subscription.add(
+        this.someService.getData().subscribe(data => { /* handle data */ })
+      );
+    }
+
+    ngOnDestroy() {
+      this.subscription.unsubscribe();
+    }
+  }
+  ```
+
+**114. How do you handle file uploads and downloads in Angular?**
+
+- **File Uploads:** Use Angular’s `HttpClient` to send files to a server.
+
+  **Example:**
+  ```typescript
+  import { HttpClient } from '@angular/common/http';
+
+  @Component({
+    selector: 'app-upload',
+    template: `<input type="file" (change)="onFileChange($event)">`
+  })
+  export class UploadComponent {
+    constructor(private http: HttpClient) {}
+
+    onFileChange(event: any) {
+      const file = event.target.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      this.http.post('your-api-url/upload', formData).subscribe(response => {
+        console.log('File uploaded successfully');
+      });
+    }
+  }
+  ```
+
+- **File Downloads:** Use Angular’s `HttpClient` to download files and trigger a file download in the browser.
+
+  **Example:**
+  ```typescript
+  import { HttpClient } from '@angular/common/http';
+  import { saveAs } from 'file-saver';
+
+  @Component({
+    selector: 'app-download',
+    template: `<button (click)="downloadFile()">Download</button>`
+  })
+  export class DownloadComponent {
+    constructor(private http: HttpClient) {}
+
+    downloadFile() {
+      this.http.get('your-api-url/file', { responseType: 'blob' }).subscribe(blob => {
+        saveAs(blob, 'filename.ext');
+      });
+    }
+  }
+  ```
+
+**115. What are Angular's best practices for managing application state?**
+
+- **State Management Best Practices:**
+  - **Use Services:** Manage state within services to centralize state logic.
+  - **Leverage State Management Libraries:** Use libraries like NgRx or Akita for complex state management needs.
+  - **Immutable State:** Keep the state immutable to prevent unintended side effects.
+  - **Encapsulation:** Encapsulate state management logic to maintain a clean separation of concerns.
+
+  **Example with NgRx:**
+  - **Define Actions:**
+    ```typescript
+    import { createAction, props } from '@ngrx/store';
+
+    export const loadItems = createAction('[Item List] Load Items');
+    export const loadItemsSuccess = createAction('[Item List] Load Items Success', props<{ items: Item[] }>());
+    ```
+
+  - **Define Reducer:**
+    ```typescript
+    import { createReducer, on } from '@ngrx/store';
+    import { loadItemsSuccess } from './item.actions';
+
+    export const initialState: ItemState = { items: [] };
+
+    const _itemReducer = createReducer(
+      initialState,
+      on(loadItemsSuccess, (state, { items }) => ({ ...state, items }))
+    );
+
+    export function itemReducer(state: ItemState | undefined, action: Action) {
+      return _itemReducer(state, action);
+    }
+    ```
+
+  - **Use Store in Components:**
+    ```typescript
+    import { Store } from '@ngrx/store';
+    import { Observable } from 'rxjs';
+    import { loadItems } from './item.actions';
+    import { Item } from './item.model';
+
+    @Component({
+      selector: 'app-item-list',
+      template: `...`
+    })
+    export class ItemListComponent implements OnInit {
+      items$: Observable<Item[]>;
+
+      constructor(private store: Store<{ items: Item[] }>) {
+        this.items$ = this.store.select('items');
+      }
+
+      ngOnInit() {
+        this.store.dispatch(loadItems());
+      }
+    }
+    ```
 
