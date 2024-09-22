@@ -2522,3 +2522,192 @@ Certainly! Here are some more important Angular-related questions and answers:
     }
     ```
 
+Certainly! Here are some more important Angular-related questions and answers:
+
+**116. What are Angular Elements and how can you use them?**
+
+- **Angular Elements:** Angular Elements allow you to create Angular components as custom elements (web components). This enables Angular components to be used in non-Angular environments, such as plain HTML pages or other frameworks.
+
+  **Usage:**
+  - **Create an Angular Component:** Define a regular Angular component.
+  - **Convert to Angular Element:** Use `@angular/elements` to convert the component into a custom element.
+
+  **Example:**
+  ```typescript
+  import { Component, Injector } from '@angular/core';
+  import { createCustomElement } from '@angular/elements';
+  import { BrowserModule } from '@angular/platform-browser';
+  import { NgModule } from '@angular/core';
+
+  @Component({
+    selector: 'app-my-element',
+    template: `<p>Hello, I am an Angular Element!</p>`,
+  })
+  export class MyElementComponent {}
+
+  @NgModule({
+    declarations: [MyElementComponent],
+    imports: [BrowserModule],
+    entryComponents: [MyElementComponent],
+  })
+  export class AppModule {
+    constructor(private injector: Injector) {
+      const myElement = createCustomElement(MyElementComponent, { injector });
+      customElements.define('my-element', myElement);
+    }
+    ngDoBootstrap() {}
+  }
+  ```
+
+**117. What is Angular Universal and how does it enable server-side rendering (SSR)?**
+
+- **Angular Universal:** Angular Universal is a technology for server-side rendering (SSR) of Angular applications. It allows you to render Angular applications on the server and send pre-rendered HTML to the client, improving performance and SEO.
+
+  **Setup:**
+  - **Add Angular Universal:** Use Angular CLI to add Angular Universal to your project.
+  - **Configure Server-Side Rendering:** Implement server-side rendering with Express or another Node.js server.
+
+  **Example:**
+  ```bash
+  ng add @nguniversal/express-engine
+  ```
+
+  **Server Configuration (server.ts):**
+  ```typescript
+  import 'zone.js/dist/zone-node';
+  import { ngExpressEngine } from '@nguniversal/express-engine';
+  import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
+  import { AppServerModule } from './src/main.server';
+  import { AppServerModuleNgFactory, LAZY_MODULE_MAP } from './dist/server/main';
+
+  const app = express();
+
+  app.engine('html', ngExpressEngine({
+    bootstrap: AppServerModuleNgFactory,
+    providers: [
+      provideModuleMap(LAZY_MODULE_MAP),
+    ],
+  }));
+
+  app.set('view engine', 'html');
+  app.set('views', join(__dirname, 'browser'));
+
+  app.get('*', (req, res) => {
+    res.render('index', { req });
+  });
+  ```
+
+**118. How does Angular handle memory management and garbage collection?**
+
+- **Memory Management:** Angular relies on JavaScript’s garbage collection for memory management. Angular provides built-in tools and patterns to help manage memory effectively, such as:
+
+  - **Change Detection:** Automatically tracks changes and updates views.
+  - **Dependency Injection:** Manages lifecycle and scope of services.
+
+  **Garbage Collection:**
+  - **Automatic:** Unused objects are cleaned up by JavaScript’s garbage collector.
+  - **Manual Cleanup:** Developers need to manually unsubscribe from observables and clean up resources to prevent memory leaks.
+
+  **Example of Manual Cleanup:**
+  ```typescript
+  import { Subscription } from 'rxjs';
+
+  @Component({
+    selector: 'app-example',
+    templateUrl: './example.component.html',
+  })
+  export class ExampleComponent implements OnDestroy {
+    private subscription: Subscription = new Subscription();
+
+    ngOnInit() {
+      this.subscription.add(
+        this.dataService.getData().subscribe(data => this.data = data)
+      );
+    }
+
+    ngOnDestroy() {
+      this.subscription.unsubscribe();
+    }
+  }
+  ```
+
+**119. How do you handle forms with dynamic fields in Angular?**
+
+- **Dynamic Forms:** Angular supports dynamic forms by allowing you to create and manage forms programmatically.
+
+  **Example:**
+  - **Create Form Groups Dynamically:**
+  ```typescript
+  import { Component, OnInit } from '@angular/core';
+  import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+
+  @Component({
+    selector: 'app-dynamic-form',
+    template: `
+      <form [formGroup]="dynamicForm">
+        <div formArrayName="fields">
+          <div *ngFor="let field of fields.controls; let i = index">
+            <input [formControlName]="i" />
+          </div>
+        </div>
+        <button (click)="addField()">Add Field</button>
+      </form>
+    `,
+  })
+  export class DynamicFormComponent implements OnInit {
+    dynamicForm: FormGroup;
+
+    constructor(private fb: FormBuilder) {}
+
+    ngOnInit() {
+      this.dynamicForm = this.fb.group({
+        fields: this.fb.array([]),
+      });
+    }
+
+    get fields() {
+      return this.dynamicForm.get('fields') as FormArray;
+    }
+
+    addField() {
+      this.fields.push(this.fb.control(''));
+    }
+  }
+  ```
+
+**120. How can you implement offline functionality in an Angular application?**
+
+- **Offline Functionality:** Implement offline functionality using Angular’s Service Worker and caching strategies.
+
+  **Steps:**
+  - **Add PWA Support:** Add a service worker to your Angular application using Angular CLI.
+  - **Configure Caching Strategies:** Define caching strategies for different resources in `ngsw-config.json`.
+
+  **Example Configuration:**
+  ```json
+  {
+    "index": "/index.html",
+    "assetGroups": [
+      {
+        "name": "app",
+        "installMode": "prefetch",
+        "resources": {
+          "files": [
+            "/favicon.ico",
+            "/index.html",
+            "/manifest.webmanifest"
+          ]
+        }
+      },
+      {
+        "name": "assets",
+        "installMode": "lazy",
+        "resources": {
+          "urls": [
+            "/assets/**"
+          ]
+        }
+      }
+    ]
+  }
+  ```
